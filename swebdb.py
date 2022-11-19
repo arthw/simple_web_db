@@ -100,6 +100,7 @@ Value:<br>
         ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
         
         if ctype != 'application/json':
+            logging.warn("ctype != 'application/json'")
             self.send_response(400)
             self.end_headers()
             return
@@ -111,6 +112,7 @@ Value:<br>
         val = message.get('val')
         op = message.get('op')
         if not key or not op:
+            logging.warn("not key or not op")
             self.send_response(400)
             self.end_headers()
             return 
@@ -143,7 +145,7 @@ def save_data(cur_db):
 def run(handler_class=SimpleWebDB, port=80):
     load_data()
     socketserver.TCPServer.allow_reuse_address = True
-    httpd = socketserver.TCPServer(("", port), handler_class)
+    httpd = socketserver.TCPServer(("127.0.0.1", port), handler_class)
     print('Starting httpd...')
     httpd.serve_forever()
 
